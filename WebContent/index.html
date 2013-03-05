@@ -42,9 +42,8 @@
         }
     });
     
-    $.get('TestJSON', function(data) {
+    $.getJSON('TestJSON', function(data) {
     	Songs.songsController.set('content',[]);
-    	data = JSON.parse(data);
     	$(data).each(function(index,value) {
     		var song = Songs.Song.create({
                 title: value.title,
