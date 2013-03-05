@@ -43,18 +43,17 @@
     });
     
     $.get('TestJSON', function(data) {
+    	Songs.songsController.set('content',[]);
     	data = JSON.parse(data);
-    	console.log('payload: ' + JSON.stringify(data));
-    	for(var i = 0; i < data.length; i++) {
-    		var songData = data[i];
+    	$(data).each(function(index,value) {
     		var song = Songs.Song.create({
-                title: songData.title,
-                artist: songData.artist,
-                genre: songData.genre
+                title: value.title,
+                artist: value.artist,
+                genre: value.genre
             });
-    		console.log('adding song: ' + JSON.stringify(songData));
+    		console.log('adding song: ' + value.title);
     		Songs.songsController.content.pushObject(song);
-    	}
+    	});
 	});
     
     </script>
