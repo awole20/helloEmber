@@ -1,0 +1,87 @@
+<html>
+<head>
+    <script src="jquery-1.9.1.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="ember-1.0.0-rc.1.js"></script>
+    <script>
+    
+    /*** Application ***/
+    Songs = Ember.Application.create({
+        mixmaster: 'Andy',
+        totalReviews: 0,
+        ready: function(){
+            console.log('Ember sings helloooooooooo!');
+        }
+    });
+    
+    /*** Model ***/
+    Songs.Song = Ember.Object.extend({
+        title: null,
+        artist: null,
+        genre: null,
+        listens: 0
+    });
+    
+    /*** View ***/
+    Songs.ReviewTextArea = Ember.TextArea.extend({
+        placeholder: 'Enter your review'
+    });
+    
+    /*** Controller ***/
+    
+    Songs.songsController = Ember.ArrayController.create({
+        content: [],
+        init: function(){
+            // create an instance of the Song model
+            var song = Songs.Song.create({
+                title: 'Son of the Morning',
+                artist: 'Oh, Sleeper',
+                genre: 'Screamo'
+            });
+            this.content.pushObject(song);
+        }
+    });
+    
+    $.get('TestJSON', function(data) {
+    	data = JSON.parse(data);
+    	console.log('payload: ' + JSON.stringify(data));
+    	for(var i = 0; i < data.length; i++) {
+    		var songData = data[i];
+    		var song = Songs.Song.create({
+                title: songData.title,
+                artist: songData.artist,
+                genre: songData.genre
+            });
+    		console.log('adding song: ' + JSON.stringify(songData));
+    		Songs.songsController.content.pushObject(song);
+    	}
+	});
+    
+    </script>
+</head>
+<body>
+
+	<script type="text/x-handlebars">
+		Hello <b>{{Songs.mixmaster}}</b>
+
+    	{{view Songs.ReviewTextArea}}
+		My songs have {{Songs.totalReviews}} reviews.
+
+		{{#if Songs.totalReviews}}
+			Read all my reviews!
+		{{else}}
+			There are no reviews right now.
+		{{/if}}
+
+		{{#each Songs.songsController}}
+			<h3>{{title}}</h3>
+        	<p>{{artist}} - {{genre}}</p>
+		{{else}}
+  			Sorry nobody is here.
+		{{/each}}
+
+		{{view Ember.TextField valueBinding="Songs.totalReviews"}}
+		
+	</script>
+</body>
+</html>
