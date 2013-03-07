@@ -62,6 +62,9 @@
     	test: 'testing'
     });
     
+    Songs.mycontroller = Songs.IndexController.create();
+    Songs.mycontroller.set('content',pollSongs());
+    
     function pollSongs() {
     	var songs = [];
     	
@@ -130,11 +133,22 @@
 	
 	<script type="text/x-handlebars" data-template-name="about">
 		Hello <b>{{Songs.mixmaster}}</b>
+
 		<nav>
   			{{#linkTo "index"}}Home{{/linkTo}}
   			{{#linkTo "about"}}About{{/linkTo}}
   			{{#linkTo "favorites"}}Favorites{{/linkTo}}
 		</nav>
+
+		{{#each Songs.mycontroller}}
+			<h3>{{title}}</h3>
+        	<p>{{artist}} - {{genre}}</p>
+			{{view Ember.TextField valueBinding="artist"}}
+			{{view Ember.TextField valueBinding="Songs.mycontroller.test"}}
+		{{else}}
+  			Sorry nobody is here.
+		{{/each}}
+
 	</script>
 	
 	<script type="text/x-handlebars" data-template-name="favorites">
