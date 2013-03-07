@@ -24,9 +24,21 @@
 	    controller.set('content', pollSongs());
 	  },
 	  renderTemplate: function() {
-	    this.render('index');
-	  }
+		    this.render('index');
+		  }
 	});
+    
+    Songs.aboutRoute = Ember.Route.extend({
+  	  renderTemplate: function() {
+  		    this.render('about');
+  		  }
+  	});
+    
+    Songs.favoritesRoute = Ember.Route.extend({
+  	  renderTemplate: function() {
+  		    this.render('favorites');
+  		  }
+  	});
     
     Songs.Router.map(function() {
     	this.route("index", { path: "/" });
@@ -83,9 +95,14 @@
 </head>
 <body>
 
+	<div>OH HELLO THIS IS THE GLOBAL DIV HOORAY</div>
 	<script type="text/x-handlebars" data-template-name="index">
 		Hello <b>{{Songs.mixmaster}}</b>
-
+		<nav>
+  			{{#linkTo "index"}}Home{{/linkTo}}
+  			{{#linkTo "about"}}About{{/linkTo}}
+			{{#linkTo "favorites"}}Favorites{{/linkTo}}
+		</nav>
     	
 		My songs have {{Songs.totalReviews}} reviews.
 
@@ -109,11 +126,28 @@
 
 		{{#linkTo "index"}}<img class="logo">{{/linkTo}}
 
-<nav>
-  {{#linkTo "index"}}Home{{/linkTo}}
-  {{#linkTo "about"}}About{{/linkTo}}
-  {{#linkTo "favorites"}}Favorites{{/linkTo}}
-</nav>
 	</script>
+	
+	<script type="text/x-handlebars" data-template-name="about">
+		Hello <b>{{Songs.mixmaster}}</b>
+		<nav>
+  			{{#linkTo "index"}}Home{{/linkTo}}
+  			{{#linkTo "about"}}About{{/linkTo}}
+  			{{#linkTo "favorites"}}Favorites{{/linkTo}}
+		</nav>
+	</script>
+	
+	<script type="text/x-handlebars" data-template-name="favorites">
+		Hello favorite <b>{{Songs.mixmaster}}</b>
+		<nav>
+  			{{#linkTo "index"}}Home{{/linkTo}}
+  			{{#linkTo "about"}}About{{/linkTo}}
+			{{#linkTo "favorites"}}Favorites{{/linkTo}}
+		</nav>
+	</script>
+	<script type="text/x-handlebars" data-template-name="test">
+		This is some extra test stuff
+	</script>
+	
 </body>
 </html>
