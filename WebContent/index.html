@@ -11,8 +11,28 @@
         totalReviews: 0,
         ready: function(){
             console.log('Ember sings helloooooooooo!');
-        }
+        },
+        LOG_TRANSITIONS: true
     });
+    
+    /*** Routers ***/
+    
+    Songs.IndexRoute = Ember.Route.extend({
+	  setupController: function(controller) {
+	    // Set the IndexController's `title`
+	    controller.set('title', "My App");
+	    controller.set('content', pollSongs());
+	  },
+	  renderTemplate: function() {
+	    this.render('index');
+	  }
+	});
+    
+    Songs.Router.map(function() {
+    	this.route("index", { path: "/" });
+    	  this.route("about", { path: "/about" });
+    	  this.route("favorites", { path: "/favs" });
+    	});
     
     /*** Model ***/
     Songs.Song = Ember.Object.extend({
@@ -22,47 +42,48 @@
         listens: 0
     });
     
-    /*** View ***/
-    Songs.ReviewTextArea = Ember.TextArea.extend({
-        placeholder: 'Enter your review'
-    });
+    
     
     /*** Controller ***/
     
-    Songs.songsController = Ember.ArrayController.create({
-        content: [],
-        init: function(){
-            // create an instance of the Song model
-            var song = Songs.Song.create({
-                title: 'Son of the Morning',
-                artist: 'Oh, Sleeper',
-                genre: 'Screamo'
-            });
-            this.content.pushObject(song);
-        }
-    });
+    Songs.IndexController = Ember.ArrayController.extend({});
     
-    $.getJSON('TestJSON', function(data) {
-    	Songs.songsController.set('content',[]);
-    	$(data).each(function(index,value) {
-    		var song = Songs.Song.create({
-                title: value.title,
-                artist: value.artist,
-                genre: value.genre
-            });
-    		console.log('adding song: ' + value.title);
-    		Songs.songsController.content.pushObject(song);
+    function pollSongs() {
+    	var songs = [];
+    	
+    	songs.push(Songs.Song.create({
+            title: 'nothing',
+            artist: 'oh man',
+            genre: 'dumb'
+        }));
+    	
+    	$.ajax({
+   			dataType: "json",
+   			url: 'TestJSON', 
+   			async: false,
+   			success: function(data) {
+	        	$(data).each(function(index,value) {
+	        		var song = Songs.Song.create({
+	                    title: value.title,
+	                    artist: value.artist,
+	                    genre: value.genre
+	                });
+	        		console.log('adding song: ' + value.title);
+	        		songs.push(song);
+	        	});
+   			}
     	});
-	});
+    	return songs;
+    }
     
     </script>
 </head>
 <body>
 
-	<script type="text/x-handlebars">
+	<script type="text/x-handlebars" data-template-name="index">
 		Hello <b>{{Songs.mixmaster}}</b>
 
-    	{{view Songs.ReviewTextArea}}
+    	
 		My songs have {{Songs.totalReviews}} reviews.
 
 		{{#if Songs.totalReviews}}
@@ -71,7 +92,7 @@
 			There are no reviews right now.
 		{{/if}}
 
-		{{#each Songs.songsController}}
+		{{#each controller}}
 			<h3>{{title}}</h3>
         	<p>{{artist}} - {{genre}}</p>
 		{{else}}
@@ -80,6 +101,14 @@
 
 		{{view Ember.TextField valueBinding="Songs.totalReviews"}}
 		
+
+		{{#linkTo "index"}}<img class="logo">{{/linkTo}}
+
+<nav>
+  {{#linkTo "index"}}Home{{/linkTo}}
+  {{#linkTo "about"}}About{{/linkTo}}
+  {{#linkTo "favorites"}}Favorites{{/linkTo}}
+</nav>
 	</script>
 </body>
 </html>
