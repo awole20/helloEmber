@@ -46,7 +46,9 @@
     
     /*** Controller ***/
     
-    Songs.IndexController = Ember.ArrayController.extend({});
+    Songs.IndexController = Ember.ArrayController.extend({
+    	test: 'testing'
+    });
     
     function pollSongs() {
     	var songs = [];
@@ -75,6 +77,7 @@
     	});
     	return songs;
     }
+
     
     </script>
 </head>
@@ -95,6 +98,8 @@
 		{{#each controller}}
 			<h3>{{title}}</h3>
         	<p>{{artist}} - {{genre}}</p>
+			{{view Ember.TextField valueBinding="artist"}}
+			{{view Ember.TextField valueBinding="controller.test"}}
 		{{else}}
   			Sorry nobody is here.
 		{{/each}}
